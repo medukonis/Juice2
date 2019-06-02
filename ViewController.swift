@@ -11,6 +11,19 @@ var go : Bool = true
 class ViewController: UIViewController
 {
     var oldTimer: Timer?
+    var startDate: String!
+    var startTime: String!
+    var left: String!
+    var right: String!
+    var kwh: String!
+    var measurements = [String]()
+    
+    @IBOutlet weak var leftSide: UITextField!
+    @IBOutlet weak var rightSide: UITextField!
+    @IBOutlet weak var killoWattHours: UITextField!
+    @IBOutlet weak var lblStartDate: UILabel!
+    @IBOutlet weak var lblStartTime: UILabel!
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -26,6 +39,9 @@ class ViewController: UIViewController
     @IBAction func halt(_ sender: Any)
     {
         oldTimer?.invalidate()
+        leftSide.text = "--"
+        rightSide.text = "--"
+        killoWattHours.text = "--"
     }
     
     @objc func getTheGoods()
@@ -34,14 +50,28 @@ class ViewController: UIViewController
         
             do
             {
-                let contents = try String(contentsOf:downloadURL, encoding: .utf8)
-                print(contents)
+                var contents = try String(contentsOf:downloadURL, encoding: .utf8)
+                measurements = contents.components(separatedBy: ",")
+                startDate = measurements[0]
+                startTime = measurements[1]
+                left = measurements[2]
+                right = measurements[3]
+                kwh = measurements[4]
+                leftSide.text = left
+                rightSide.text = right
+                killoWattHours.text = kwh
+                lblStartDate.text = startDate
+                lblStartTime.text = startTime
+                
             }
             catch let error as NSError
             {
                 print("Error: \(error)")
             }
     }
+    
+   
+    
     
     
 }
